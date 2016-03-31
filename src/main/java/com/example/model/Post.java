@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -35,4 +37,23 @@ public class Post implements Serializable {
     public void setTitle(String title) { this.title = title; }
 
     @Column
+    public String getText() { return this.text; }
+
+    public void setText(String text) { this.text = text; }
+
+    @OneToMany(mappedBy = "post")
+    @JsonManagedReference
+    public List<Comment> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Comment addComment(Comment comment) {
+        getComments().add(comment);
+        comment.setPost(this);
+        return comment;
+    }
 }
